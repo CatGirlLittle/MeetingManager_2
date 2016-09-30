@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -40,6 +41,8 @@ public class MyService extends Service implements MyCallBackHandle{
     private List<MeetRoominfo> mRoominfos=new ArrayList<MeetRoominfo>();
     private MyStringCallBack mBack;
     private Intent intent = new Intent("com.example.communication.RECEIVER");
+    private Intent beforeintent=new Intent("before");
+    private Intent afterintent=new Intent("after");
     public MyService() {
     }
 
@@ -81,11 +84,12 @@ public class MyService extends Service implements MyCallBackHandle{
 
     @Override
     public void onBefore(Request request, int id) {
-
+        sendBroadcast(beforeintent);
     }
 
     @Override
     public void onAfter(int id) {
+        sendBroadcast(afterintent);
     }
 
     @Override

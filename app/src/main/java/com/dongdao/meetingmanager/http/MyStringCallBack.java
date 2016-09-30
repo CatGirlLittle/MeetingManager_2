@@ -29,21 +29,17 @@ public class MyStringCallBack extends StringCallback {
 
     @Override
     public void onBefore(Request request, int id) {
-
-        super.onBefore(request, id);
         mHandle.onBefore(request,id);
     }
 
 
     @Override
     public void onAfter(int id) {
-        super.onAfter(id);
         mHandle.onAfter(id);
     }
 
     @Override
     public void inProgress(float progress, long total, int id) {
-        super.inProgress(progress, total, id);
         mHandle.inProgress(progress,total,id);
     }
 
