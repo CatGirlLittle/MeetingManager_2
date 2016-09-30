@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:id="@+id/meetingbg"
+              >
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_weight="0.8"
+        android:id="@+id/room"
+        android:gravity="center"
+        android:text="301"
+        android:textSize="20px"/>
+
+    <com.dongdao.meetingmanager.view.MtTextView
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_weight="1.2"
+        android:id="@+id/name"
+        android:gravity="center"
+        android:text="会议名称"
+        android:textSize="20px"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_weight="1"
+        android:id="@+id/date"
+        android:gravity="center"
+        android:text="会议日期"
+        android:textSize="18px"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_weight="1"
+        android:id="@+id/time"
+        android:gravity="center"
+        android:text="会议时间"
+        android:textSize="20px"/>
+
+    <com.dongdao.meetingmanager.view.MtTextView
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_weight="1"
+        android:id="@+id/people"
+        android:gravity="center"
+        android:text="组织者"
+        android:textSize="20px"
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:scrollHorizontally="true"
+        />
+
+
+</LinearLayout>
