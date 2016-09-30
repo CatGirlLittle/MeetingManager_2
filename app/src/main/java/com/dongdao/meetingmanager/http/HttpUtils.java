@@ -30,4 +30,12 @@ public class HttpUtils {
                    .execute(myStringCallBack);
 
     }
+    public static void post_Pic(String url, int id , Map <String,String> parms, MyBitmapCallBack bitmapCallBack){
+        OkHttpUtils.post()
+                .params(parms)
+                .url(url)
+                .id(id)
+                .build()
+                .execute(bitmapCallBack);
+    }
 }

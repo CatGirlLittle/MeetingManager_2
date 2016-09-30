@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,11 +24,14 @@ import com.dongdao.meetingmanager.R;
 import com.dongdao.meetingmanager.adapter.MeetingAdapter;
 import com.dongdao.meetingmanager.http.HttpUrl;
 import com.dongdao.meetingmanager.http.HttpUtils;
+import com.dongdao.meetingmanager.http.MyBitmapCallBack;
 import com.dongdao.meetingmanager.http.MyCallBackHandle;
 import com.dongdao.meetingmanager.http.MyStringCallBack;
 import com.dongdao.meetingmanager.info.MeetRoominfo;
 import com.dongdao.meetingmanager.info.Meetinginfo;
+import com.dongdao.meetingmanager.info.Pic;
 import com.dongdao.meetingmanager.service.MyService;
+import com.lidroid.xutils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -51,9 +55,13 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private ListView mListView;
     private ViewFlipper mFlipper;
     private MyStringCallBack mBack;
+    private MyBitmapCallBack mBitmapCallBack;
     private TextView textView, nowroom,nowtheme,nowtime,nowuser;
     private LinearLayout mLayout;
     private MsgReceiver msgReceiver;
+    private List<Pic> mPics=new ArrayList<>();
+    private BitmapUtils mUtils;
+
     //天气接口
     //TextView滚动
 
@@ -61,6 +69,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_meeting_list);
+        mUtils=new BitmapUtils(this);
         initView();
         initData();
         initAdapter();
@@ -74,7 +83,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         registerReceiver(msgReceiver, intentFilter);
         Intent intent=new Intent(this,MyService.class);
         startService(intent);
-       // getMeetingData();
+        getPic();
     }
 
     private void initAdapter() {
@@ -93,20 +102,12 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         nowtheme= (TextView) this.findViewById(R.id.nowtheme);
         nowtime= (TextView) this.findViewById(R.id.nowtime);
         nowuser= (TextView) this.findViewById(R.id.nowuser);
-        mFlipper.startFlipping();
+        //mFlipper.startFlipping();
         mLayout= (LinearLayout) this.findViewById(R.id.nowbg);
         mLayout.setBackgroundResource(R.drawable.rightmeeting);
 
 
 
-    }
-    //获得数据源
-    private void getMeetingData() {
-        mBack=new MyStringCallBack(this);
-        Map map = new HashMap();
-        map.put(HttpUrl.sMEETINGROOM, "301");
-        map.put(HttpUrl.sPAGE,"1");
-        HttpUtils.post(HttpUrl.sHTPPHOST+HttpUrl.sMEETINGS, 1, map, mBack);
     }
 
     @Override
@@ -120,12 +121,14 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
            case 1:
               // parse(s);
                break;
+           case 2:
+               parse(s.toString(),2);
+               break;
        }
     }
 
     @Override
     public void onBefore(Request request, int id) {
-
     }
 
     @Override
@@ -138,16 +141,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
 
     }
 
-    private void translateAnimation(){
-        AnimationSet animationSet=new AnimationSet(true);
-        TranslateAnimation animation=new TranslateAnimation(Animation.RELATIVE_TO_PARENT,0,Animation.RELATIVE_TO_SELF,-30,Animation.RELATIVE_TO_PARENT,0,Animation.RELATIVE_TO_PARENT,0);
-        animation.setDuration(7*1000);
-        animation.setRepeatCount(Animation.INFINITE);
-        animationSet.addAnimation(animation);
-        textView.setAnimation(animation);
-
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -157,24 +150,17 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(msgReceiver);
+        mUtils=null;
        /* mMeetinginfos.clear();
         mRoominfos.clear();
         nowMeetinginfos.clear();
         mMeetinginfo=null;*/
 
     }
-    //数据处理
-    private List<Meetinginfo> initallList(List<MeetRoominfo> roominfos,List<Meetinginfo> meetinginfos) {
-        for(int i=0;i<roominfos.size();i++){
-            //meetingroom, String meetingtheme, String meetingtime, String meetinguser, String begintime, String endtime, int usestatus
-            mMeetinginfo=new Meetinginfo(roominfos.get(i).getMeetingroom(),"","","","","",0);
-            meetinginfos.add(0, mMeetinginfo);
-        }
-             return meetinginfos;
-    }
+
     //JSON 解析
-    private void parse(String s){
-        JSONObject object= JSON.parseObject(s);
+    private void parse(String s,int id){
+        /*JSONObject object= JSON.parseObject(s);
         JSONObject result=object.getJSONObject("result");
         JSONObject allMeeting=result.getJSONObject("allMeeting");
         JSONArray freeRoom=result.getJSONArray("freeRoom");
@@ -188,7 +174,25 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         nowuser.setText(mMeetinginfo.getMeetinguser());
         mMeetinginfos=JSON.parseArray(list.toString(),Meetinginfo.class);
         mRoominfos=JSON.parseArray(freeRoom.toString(),MeetRoominfo.class);
-       // initallList(mRoominfos,mMeetinginfos);
+       // initallList(mRoominfos,mMeetinginfos);*/
+        switch (id){
+            case 1:
+                break;
+            case 2:
+                JSONObject object= JSON.parseObject(s);
+                JSONObject result=object.getJSONObject("result");
+                JSONArray picList=result.getJSONArray("picList");
+                mPics=JSON.parseArray(picList.toString(),Pic.class);
+                for(int i=0;i<mPics.size();i++){
+                    String url=mPics.get(i).getPicpath();
+                    ImageView view=new ImageView(this);
+                    view.setAdjustViewBounds(true);
+                    mUtils.display(view,url);
+                    mFlipper.addView(view);
+                }
+                mFlipper.startFlipping();
+                break;
+        }
 
     }
     class  MsgReceiver extends BroadcastReceiver {
@@ -217,4 +221,9 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
            // parse(intent.getStringExtra("progress"));
         }
     }
+    private void getPic(){
+        mBack=new MyStringCallBack(this);
+        HttpUtils.post("http://192.168.1.76:8702/cfpic/allpic.do",2,null,mBack);
+    }
+
 }
