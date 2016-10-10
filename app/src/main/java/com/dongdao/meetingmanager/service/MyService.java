@@ -31,6 +31,7 @@ import okhttp3.Call;
 import okhttp3.Request;
 
 import static android.os.Build.VERSION_CODES.M;
+import static com.dongdao.meetingmanager.R.id.cancel_action;
 import static com.dongdao.meetingmanager.R.id.nowroom;
 import static com.dongdao.meetingmanager.R.id.nowtheme;
 import static com.dongdao.meetingmanager.R.id.nowtime;
@@ -88,17 +89,13 @@ public class MyService extends Service implements MyCallBackHandle{
     public void onResponse(Object s, int i) {
         switch (i){
             case 1:
-                parse(s.toString());
+                parse(s.toString(),1);
                 intent.putExtra("meetings", (Serializable) mMeetinginfos);
                 intent.putExtra("nowmeeting", (Serializable) nowMeetinginfos);
                 sendBroadcast(intent);
                 break;
             case 3:
-                JSONObject object=JSON.parseObject(s.toString());
-                JSONObject data=object.getJSONObject("data");
-                JSONArray forcast=data.getJSONArray("forecast");
-                mWeathers=JSON.parseArray(forcast.toString(),Weather.class);
-                mWeather=mWeathers.get(0);
+                parse(s.toString(),3);
                 weatherintent.putExtra("weather",mWeather);
                 sendBroadcast(weatherintent);
                 break;
@@ -119,17 +116,29 @@ public class MyService extends Service implements MyCallBackHandle{
     @Override
     public void inProgress(float progress, long total, int id) {
     }
-    private void parse(String s){
-        JSONObject object= JSON.parseObject(s);
-        JSONObject result=object.getJSONObject("result");
-        JSONObject allMeeting=result.getJSONObject("allMeeting");
-        JSONArray freeRoom=result.getJSONArray("freeRoom");
-        JSONArray nowMeeting=result.getJSONArray("nowMeeting");
-        JSONArray list=allMeeting.getJSONArray("list");
-        nowMeetinginfos=JSON.parseArray(nowMeeting.toString(),Meetinginfo.class);
-        mMeetinginfos=JSON.parseArray(list.toString(),Meetinginfo.class);
-        mRoominfos=JSON.parseArray(freeRoom.toString(),MeetRoominfo.class);
-        initallList(mRoominfos,mMeetinginfos);
+    private void parse(String s,int index){
+        switch (index){
+            case 1:
+                JSONObject object= JSON.parseObject(s);
+                JSONObject result=object.getJSONObject("result");
+                JSONObject allMeeting=result.getJSONObject("allMeeting");
+                JSONArray freeRoom=result.getJSONArray("freeRoom");
+                JSONArray nowMeeting=result.getJSONArray("nowMeeting");
+                JSONArray list=allMeeting.getJSONArray("list");
+                nowMeetinginfos=JSON.parseArray(nowMeeting.toString(),Meetinginfo.class);
+                mMeetinginfos=JSON.parseArray(list.toString(),Meetinginfo.class);
+                mRoominfos=JSON.parseArray(freeRoom.toString(),MeetRoominfo.class);
+                initallList(mRoominfos,mMeetinginfos);
+                break;
+            case 3:
+                JSONObject weather=JSON.parseObject(s);
+                JSONObject data=weather.getJSONObject("data");
+                JSONArray forcast=data.getJSONArray("forecast");
+                mWeathers=JSON.parseArray(forcast.toString(),Weather.class);
+                mWeather=mWeathers.get(0);
+                break;
+        }
+
     }
     private List<Meetinginfo> initallList(List<MeetRoominfo> roominfos,List<Meetinginfo> meetinginfos) {
         for(int i=0;i<roominfos.size();i++){
