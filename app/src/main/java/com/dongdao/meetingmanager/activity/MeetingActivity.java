@@ -8,17 +8,14 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -31,9 +28,12 @@ import com.dongdao.meetingmanager.info.Meetinginfo;
 import com.dongdao.meetingmanager.info.Pic;
 import com.dongdao.meetingmanager.info.Weather;
 import com.dongdao.meetingmanager.service.MyService;
+import com.dongdao.meetingmanager.view.MtTextView;
 import com.lidroid.xutils.BitmapUtils;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.Call;
 import okhttp3.Request;
 
@@ -55,7 +55,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private MsgReceiver msgReceiver;
     private BitmapUtils mUtils;
     private Weather mWeather;
-    private WeatherReciver mWeatherReciver;
+    private MtTextView tips;
     //天气接口
     //TextView滚动
 
@@ -87,27 +87,20 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
             }
             if(action.equals("before")){
                 Toast.makeText(MeetingActivity.this,"正在更新数据",Toast.LENGTH_SHORT).show();
+                Log.e("111","111");
             }
             if(action.equals("after")){
                 Toast.makeText(MeetingActivity.this,"更新数据完成",Toast.LENGTH_SHORT).show();
+                Log.e("222","222");
             }
-            // parse(intent.getStringExtra("progress"));
-        }
-    }
-    class  WeatherReciver extends BroadcastReceiver{
-        public WeatherReciver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String  action=intent.getAction();
             if(action.equals("weather")){
                 mWeather= (Weather) intent.getSerializableExtra("weather");
                 textview.setText(mWeather.getType()+" "+mWeather.getLow().substring(2)+"--"+mWeather.getHigh().substring(2));
             }
-
+            // parse(intent.getStringExtra("progress"));
         }
     }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -124,11 +117,8 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         intentFilter.addAction("com.example.communication.RECEIVER");
         intentFilter.addAction("before");
         intentFilter.addAction("after");
+        intentFilter.addAction("weather");
         registerReceiver(msgReceiver, intentFilter);
-        mWeatherReciver=new WeatherReciver();
-        IntentFilter  weatherintentFilter=new IntentFilter();
-        weatherintentFilter.addAction("weather");
-        registerReceiver(mWeatherReciver,weatherintentFilter);
         Intent intent=new Intent(this,MyService.class);
         startService(intent);
         getPic();
@@ -141,6 +131,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     //初始化控件
     private void initView() {
         textview= (TextView) this.findViewById(R.id.weather);
+        tips= (MtTextView) this.findViewById(R.id.tips);
         mListView= (ListView) this.findViewById(R.id.meetings);
         mFlipper= (ViewFlipper) this.findViewById(myviewflipper);
         nowroom= (TextView) this.findViewById(R.id.nowroom);
@@ -188,6 +179,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     @Override
     protected void onResume() {
         super.onResume();
+        setAnimation();
     }
 
     @Override
@@ -227,11 +219,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     }
 
     private void setAnimation(){
-        TranslateAnimation animation=new TranslateAnimation(Animation.RELATIVE_TO_SELF,0,Animation.RELATIVE_TO_SELF,-2,Animation.RELATIVE_TO_SELF,0,Animation.RELATIVE_TO_SELF,0);
-        animation.setInterpolator(new LinearInterpolator());
-        animation.setDuration(8);
-        animation.setRepeatCount(10);
-        animation.start();
+
     }
 
 }

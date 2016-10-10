@@ -29,7 +29,6 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:textSize="24px"
-            android:text="晴天 23度"
             android:layout_toStartOf="@+id/txtclock"
             android:layout_marginRight="10dp"
             android:id="@+id/weather"/>
@@ -276,10 +275,28 @@
                             android:layout_height="match_parent"
                             android:gravity="left|center_vertical"
                             android:layout_alignParentLeft="true"
-                            android:text="提示信息：302会议室正在使用中"
+                            android:text="提示信息："
                             android:textSize="18px"
                             android:textColor="#333333"
-                            android:id="@+id/tips"/>
+                            android:id="@+id/tishi"
+                           />
+                        <com.dongdao.meetingmanager.view.MtTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="left|center_vertical"
+                            android:text="302会议室正在使用中"
+                            android:textSize="18px"
+                            android:textColor="#333333"
+                            android:id="@+id/tips"
+                            android:layout_toRightOf="@+id/tishi"
+                            android:singleLine="true"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:paddingLeft="1dp"
+                            android:paddingRight="1dp"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"/>
                     </RelativeLayout>
                 </RelativeLayout>
             </LinearLayout>

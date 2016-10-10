@@ -69,9 +69,8 @@ public class MyService extends Service implements MyCallBackHandle{
                 map.put(HttpUrl.sPAGE,"1");
                 HttpUtils.post(HttpUrl.sHTPPHOST+HttpUrl.sMEETINGS, 1, map, mBack);
             }
-        }, 1000,60*1000);
-        Timer timer1=new Timer();
-        timer1.schedule(new TimerTask() {
+        }, 1000,60*1000*15);
+        timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 HttpUtils.get("http://wthrcdn.etouch.cn/weather_mini?citykey=101010100",3,null,mBack);
@@ -105,12 +104,21 @@ public class MyService extends Service implements MyCallBackHandle{
 
     @Override
     public void onBefore(Request request, int id) {
-        sendBroadcast(beforeintent);
+        switch (id){
+            case 1:
+                sendBroadcast(beforeintent);
+                break;
+        }
     }
 
     @Override
     public void onAfter(int id) {
-        sendBroadcast(afterintent);
+        switch (id){
+            case 1:
+                sendBroadcast(afterintent);
+                break;
+        }
+
     }
 
     @Override
