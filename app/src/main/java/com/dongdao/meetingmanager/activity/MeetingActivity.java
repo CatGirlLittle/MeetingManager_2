@@ -8,7 +8,11 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,18 +25,18 @@ import com.alibaba.fastjson.JSONObject;
 import com.dongdao.meetingmanager.R;
 import com.dongdao.meetingmanager.adapter.MeetingAdapter;
 import com.dongdao.meetingmanager.http.HttpUtils;
-import com.dongdao.meetingmanager.http.MyBitmapCallBack;
 import com.dongdao.meetingmanager.http.MyCallBackHandle;
 import com.dongdao.meetingmanager.http.MyStringCallBack;
-import com.dongdao.meetingmanager.info.MeetRoominfo;
 import com.dongdao.meetingmanager.info.Meetinginfo;
 import com.dongdao.meetingmanager.info.Pic;
+import com.dongdao.meetingmanager.info.Weather;
 import com.dongdao.meetingmanager.service.MyService;
 import com.lidroid.xutils.BitmapUtils;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.Call;
 import okhttp3.Request;
+
 import static com.dongdao.meetingmanager.R.id.myviewflipper;
 
 /**
@@ -40,16 +44,18 @@ import static com.dongdao.meetingmanager.R.id.myviewflipper;
  */
 public class MeetingActivity extends FragmentActivity implements MyCallBackHandle{
     private List<Meetinginfo> nowMeetinginfos=new ArrayList<Meetinginfo>();
+    private List<Pic> mPics=new ArrayList<>();
     private Meetinginfo mMeetinginfo;
     private MeetingAdapter mAdapter;
     private ListView mListView;
     private ViewFlipper mFlipper;
     private MyStringCallBack mBack;
-    private TextView textView, nowroom,nowtheme,nowtime,nowuser;
+    private TextView  nowroom,nowtheme,nowtime,nowuser,textview;
     private LinearLayout mLayout;
     private MsgReceiver msgReceiver;
-    private List<Pic> mPics=new ArrayList<>();
     private BitmapUtils mUtils;
+    private Weather mWeather;
+    private WeatherReciver mWeatherReciver;
     //天气接口
     //TextView滚动
 
@@ -88,6 +94,20 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
             // parse(intent.getStringExtra("progress"));
         }
     }
+    class  WeatherReciver extends BroadcastReceiver{
+        public WeatherReciver() {
+        }
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String  action=intent.getAction();
+            if(action.equals("weather")){
+                mWeather= (Weather) intent.getSerializableExtra("weather");
+                textview.setText(mWeather.getType()+" "+mWeather.getLow().substring(2)+"--"+mWeather.getHigh().substring(2));
+            }
+
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +127,10 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         intentFilter.addAction("before");
         intentFilter.addAction("after");
         registerReceiver(msgReceiver, intentFilter);
+        mWeatherReciver=new WeatherReciver();
+        IntentFilter  weatherintentFilter=new IntentFilter();
+        weatherintentFilter.addAction("weather");
+        registerReceiver(mWeatherReciver,weatherintentFilter);
         Intent intent=new Intent(this,MyService.class);
         startService(intent);
         getPic();
@@ -118,9 +142,9 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     }
     //初始化控件
     private void initView() {
+        textview= (TextView) this.findViewById(R.id.weather);
         mListView= (ListView) this.findViewById(R.id.meetings);
         mFlipper= (ViewFlipper) this.findViewById(myviewflipper);
-        textView= (TextView) this.findViewById(R.id.tips);
         nowroom= (TextView) this.findViewById(R.id.nowroom);
         nowroom.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
         nowtheme= (TextView) this.findViewById(R.id.nowtheme);
@@ -128,6 +152,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         nowuser= (TextView) this.findViewById(R.id.nowuser);
         mLayout= (LinearLayout) this.findViewById(R.id.nowbg);
         mLayout.setBackgroundResource(R.drawable.rightmeeting);
+
     }
 
     @Override
@@ -144,12 +169,14 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
            case 2:
                parse(s.toString(),2);
                break;
+           case 3:
+               Log.e("ssssssssssssss",s.toString());
+               break;
        }
     }
 
     @Override
     public void onBefore(Request request, int id) {
-
     }
 
     @Override
@@ -200,6 +227,15 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private void getPic(){
         mBack=new MyStringCallBack(this);
         HttpUtils.post("http://192.168.1.76:8702/cfpic/allpic.do",2,null,mBack);
+
+    }
+
+    private void setAnimation(){
+        TranslateAnimation animation=new TranslateAnimation(Animation.RELATIVE_TO_SELF,0,Animation.RELATIVE_TO_SELF,-2,Animation.RELATIVE_TO_SELF,0,Animation.RELATIVE_TO_SELF,0);
+        animation.setInterpolator(new LinearInterpolator());
+        animation.setDuration(8);
+        animation.setRepeatCount(10);
+        animation.start();
     }
 
 }

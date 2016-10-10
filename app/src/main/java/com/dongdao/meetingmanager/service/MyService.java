@@ -17,6 +17,7 @@ import com.dongdao.meetingmanager.http.MyCallBackHandle;
 import com.dongdao.meetingmanager.http.MyStringCallBack;
 import com.dongdao.meetingmanager.info.MeetRoominfo;
 import com.dongdao.meetingmanager.info.Meetinginfo;
+import com.dongdao.meetingmanager.info.Weather;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,12 +38,15 @@ import static com.dongdao.meetingmanager.R.id.nowuser;
 
 public class MyService extends Service implements MyCallBackHandle{
     private List<Meetinginfo> mMeetinginfos,nowMeetinginfos=new ArrayList<Meetinginfo>();
-    private Meetinginfo mMeetinginfo;
     private List<MeetRoominfo> mRoominfos=new ArrayList<MeetRoominfo>();
+    private Meetinginfo mMeetinginfo;
+    private List<Weather> mWeathers=new ArrayList<Weather>();
+    private Weather mWeather;
     private MyStringCallBack mBack;
     private Intent intent = new Intent("com.example.communication.RECEIVER");
     private Intent beforeintent=new Intent("before");
     private Intent afterintent=new Intent("after");
+    private Intent weatherintent=new Intent("weather");
     public MyService() {
     }
 
@@ -65,7 +69,13 @@ public class MyService extends Service implements MyCallBackHandle{
                 HttpUtils.post(HttpUrl.sHTPPHOST+HttpUrl.sMEETINGS, 1, map, mBack);
             }
         }, 1000,60*1000);
-
+        Timer timer1=new Timer();
+        timer1.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                HttpUtils.get("http://wthrcdn.etouch.cn/weather_mini?citykey=101010100",3,null,mBack);
+            }
+        }, 1000,60*1000*60);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -76,10 +86,24 @@ public class MyService extends Service implements MyCallBackHandle{
 
     @Override
     public void onResponse(Object s, int i) {
-        parse(s.toString());
-        intent.putExtra("meetings", (Serializable) mMeetinginfos);
-        intent.putExtra("nowmeeting", (Serializable) nowMeetinginfos);
-        sendBroadcast(intent);
+        switch (i){
+            case 1:
+                parse(s.toString());
+                intent.putExtra("meetings", (Serializable) mMeetinginfos);
+                intent.putExtra("nowmeeting", (Serializable) nowMeetinginfos);
+                sendBroadcast(intent);
+                break;
+            case 3:
+                JSONObject object=JSON.parseObject(s.toString());
+                JSONObject data=object.getJSONObject("data");
+                JSONArray forcast=data.getJSONArray("forecast");
+                mWeathers=JSON.parseArray(forcast.toString(),Weather.class);
+                mWeather=mWeathers.get(0);
+                weatherintent.putExtra("weather",mWeather);
+                sendBroadcast(weatherintent);
+                break;
+        }
+
     }
 
     @Override
@@ -103,16 +127,9 @@ public class MyService extends Service implements MyCallBackHandle{
         JSONArray nowMeeting=result.getJSONArray("nowMeeting");
         JSONArray list=allMeeting.getJSONArray("list");
         nowMeetinginfos=JSON.parseArray(nowMeeting.toString(),Meetinginfo.class);
-       // nowroom.setText(mMeetinginfo.getMeetingroom()+"会议室会议");
-       // nowtheme.setText(mMeetinginfo.getMeetingtheme());
-        //nowtime.setText(mMeetinginfo.getBegintime().substring(0,5)+"--"+mMeetinginfo.getEndtime().substring(0,5));
-       // nowuser.setText(mMeetinginfo.getMeetinguser());
         mMeetinginfos=JSON.parseArray(list.toString(),Meetinginfo.class);
         mRoominfos=JSON.parseArray(freeRoom.toString(),MeetRoominfo.class);
         initallList(mRoominfos,mMeetinginfos);
-       // mAdapter=new MeetingAdapter(mMeetinginfos,MeetingActivity.this);
-       // mListView.setAdapter(mAdapter);
-       // mAdapter.notifyDataSetChanged();
     }
     private List<Meetinginfo> initallList(List<MeetRoominfo> roominfos,List<Meetinginfo> meetinginfos) {
         for(int i=0;i<roominfos.size();i++){
