@@ -33,6 +33,7 @@
             android:layout_marginRight="10dp"
             android:id="@+id/weather"/>
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,15 +59,7 @@
                 android:flipInterval="3000"
                 android:inAnimation="@android:anim/fade_in"
                 android:outAnimation="@android:anim/fade_out">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@mipmap/flipper_03"
-                    />
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@mipmap/ic_launcher"/>
+
             </ViewFlipper>
                 <TextView
                     android:layout_width="wrap_content"
@@ -125,7 +118,7 @@
                         android:orientation="vertical"
                         android:gravity="center_horizontal"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginBottom="7dp"
+                        android:layout_marginBottom="5dp"
                         android:id="@+id/nowbg"
                         android:layout_marginTop="40dp"
                         android:layout_marginLeft="50dp"
@@ -136,10 +129,11 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text=""
-                            android:textSize="15dp"
+                            android:textSize="14dp"
                             android:textColor="#ffffff"
                             android:gravity="center|bottom"
                             android:id="@+id/nowroom"
+                            android:layout_marginTop="2dp"
                             />
 
                         <TextView
@@ -147,7 +141,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text=""
-                            android:textSize="12dp"
+                            android:textSize="11dp"
                             android:textColor="#ffffff"
                             android:gravity="center|bottom"
                             android:id="@+id/nowtheme"
@@ -157,7 +151,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text=""
-                            android:textSize="12dp"
+                            android:textSize="11dp"
                             android:textColor="#ffffff"
                             android:gravity="center"
                             android:id="@+id/nowtime"
@@ -167,10 +161,11 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text=""
-                            android:textSize="12dp"
+                            android:textSize="11dp"
                             android:textColor="#ffffff"
                             android:gravity="center|top"
                             android:id="@+id/nowuser"
+                            android:paddingBottom="2dp"
                            />
                     </LinearLayout>
                 </RelativeLayout>

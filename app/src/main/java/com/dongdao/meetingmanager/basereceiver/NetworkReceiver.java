@@ -18,9 +18,9 @@ public class NetworkReceiver extends BroadcastReceiver {
         NetworkInfo mobNetInfo=connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);//手机自己的网络 了比如3G4G
         NetworkInfo wifiNetInfo=connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);//WIFI连接状态
         if(!mobNetInfo.isConnected()&&!wifiNetInfo.isConnected()){
-
+            Toast.makeText(context,"请检查网络设置",Toast.LENGTH_LONG).show();
         }else {
-          //  Toast.makeText(context,mobNetInfo.getTypeName()+wifiNetInfo.getTypeName(),Toast.LENGTH_LONG).show();
+           Toast.makeText(context,"网络正常",Toast.LENGTH_LONG).show();
         }
 
     }

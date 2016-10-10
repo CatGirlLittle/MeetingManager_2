@@ -2,15 +2,11 @@ package com.dongdao.meetingmanager.service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.os.IBinder;
-import android.util.Log;
-import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.dongdao.meetingmanager.activity.MeetingActivity;
-import com.dongdao.meetingmanager.adapter.MeetingAdapter;
 import com.dongdao.meetingmanager.http.HttpUrl;
 import com.dongdao.meetingmanager.http.HttpUtils;
 import com.dongdao.meetingmanager.http.MyCallBackHandle;
@@ -18,7 +14,6 @@ import com.dongdao.meetingmanager.http.MyStringCallBack;
 import com.dongdao.meetingmanager.info.MeetRoominfo;
 import com.dongdao.meetingmanager.info.Meetinginfo;
 import com.dongdao.meetingmanager.info.Weather;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,16 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import okhttp3.Call;
 import okhttp3.Request;
-
-import static android.os.Build.VERSION_CODES.M;
-import static com.dongdao.meetingmanager.R.id.cancel_action;
-import static com.dongdao.meetingmanager.R.id.nowroom;
-import static com.dongdao.meetingmanager.R.id.nowtheme;
-import static com.dongdao.meetingmanager.R.id.nowtime;
-import static com.dongdao.meetingmanager.R.id.nowuser;
 
 public class MyService extends Service implements MyCallBackHandle{
     private List<Meetinginfo> mMeetinginfos,nowMeetinginfos=new ArrayList<Meetinginfo>();
@@ -48,6 +35,7 @@ public class MyService extends Service implements MyCallBackHandle{
     private Intent beforeintent=new Intent("before");
     private Intent afterintent=new Intent("after");
     private Intent weatherintent=new Intent("weather");
+
     public MyService() {
     }
 
@@ -70,9 +58,11 @@ public class MyService extends Service implements MyCallBackHandle{
                 HttpUtils.post(HttpUrl.sHTPPHOST+HttpUrl.sMEETINGS, 1, map, mBack);
             }
         }, 1000,60*1000*15);
-        timer.schedule(new TimerTask() {
+        Timer timer1=new Timer();
+        timer1.schedule(new TimerTask() {
             @Override
             public void run() {
+                mBack=new MyStringCallBack(MyService.this);
                 HttpUtils.get("http://wthrcdn.etouch.cn/weather_mini?citykey=101010100",3,null,mBack);
             }
         }, 1000,60*1000*60);

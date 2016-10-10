@@ -5,17 +5,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Paint;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -30,10 +29,8 @@ import com.dongdao.meetingmanager.info.Weather;
 import com.dongdao.meetingmanager.service.MyService;
 import com.dongdao.meetingmanager.view.MtTextView;
 import com.lidroid.xutils.BitmapUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.Call;
 import okhttp3.Request;
 
@@ -66,6 +63,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
             String action=intent.getAction();
             if(action.equals("com.example.communication.RECEIVER")) {
                 nowMeetinginfos = (List<Meetinginfo>) intent.getSerializableExtra("nowmeeting");
@@ -87,17 +85,14 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
             }
             if(action.equals("before")){
                 Toast.makeText(MeetingActivity.this,"正在更新数据",Toast.LENGTH_SHORT).show();
-                Log.e("111","111");
             }
             if(action.equals("after")){
                 Toast.makeText(MeetingActivity.this,"更新数据完成",Toast.LENGTH_SHORT).show();
-                Log.e("222","222");
             }
             if(action.equals("weather")){
                 mWeather= (Weather) intent.getSerializableExtra("weather");
                 textview.setText(mWeather.getType()+" "+mWeather.getLow().substring(2)+"--"+mWeather.getHigh().substring(2));
             }
-            // parse(intent.getStringExtra("progress"));
         }
     }
 
@@ -118,6 +113,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         intentFilter.addAction("before");
         intentFilter.addAction("after");
         intentFilter.addAction("weather");
+        intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         registerReceiver(msgReceiver, intentFilter);
         Intent intent=new Intent(this,MyService.class);
         startService(intent);
@@ -192,8 +188,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     //JSON 解析
     private void parse(String s,int id){
         switch (id){
-            case 1:
-                break;
             case 2:
                 JSONObject object= JSON.parseObject(s);
                 JSONObject result=object.getJSONObject("result");
