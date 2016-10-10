@@ -164,13 +164,11 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     public void onResponse(Object s, int i) {
        switch (i){
            case 1:
-              // parse(s);
                break;
            case 2:
                parse(s.toString(),2);
                break;
            case 3:
-               Log.e("ssssssssssssss",s.toString());
                break;
        }
     }
