@@ -116,8 +116,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         mUtils=new BitmapUtils(this);
         initView();
         initData();
-        initAdapter();
-        initListener();
     }
     //初始化数据 通过网络请求
     private void initData() {
