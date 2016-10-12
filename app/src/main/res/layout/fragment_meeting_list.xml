@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,26 +13,61 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:background="@mipmap/top_01">
+
         <TextClock
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:layout_marginRight="7dp"
-            android:textSize="24px"
-            android:id="@+id/txtclock"
+            android:textSize="30px"
+            android:id="@+id/txtclock1"
             android:textColor="#333333"
-            android:format12Hour="yyyy-MM-dd EEEE  aah:mm:ss"
-            android:format24Hour="yyyy-MM-dd EEEE  aah:mm:ss"
+            android:format12Hour="h:mm:ss"
+            android:format24Hour="h:mm:ss"
+
             />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="24px"
+            android:textSize="22px"
             android:layout_toStartOf="@+id/txtclock"
             android:layout_marginRight="10dp"
-            android:id="@+id/weather"/>
+            android:id="@+id/weather"
+            />
+
+        <TextClock
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginRight="7dp"
+            android:textSize="22px"
+            android:id="@+id/txtclock"
+            android:textColor="#333333"
+            android:format12Hour="yyyy-MM-dd EEEE  aa"
+            android:format24Hour="yyyy-MM-dd EEEE  aa"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/txtclock1"
+            android:layout_marginEnd="2dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/weather"
+            android:layout_marginEnd="2dp"
+            android:id="@+id/texttq"
+            android:gravity="center"
+            android:textSize="22px"/>
+
+        <ImageView
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginEnd="2dp"
+            android:id="@+id/imageViewtq"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@+id/texttq"/>
     </RelativeLayout>
 
     <LinearLayout
@@ -61,22 +97,15 @@
                 android:outAnimation="@android:anim/fade_out">
 
             </ViewFlipper>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Successful examples"
-                    android:textSize="26px"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:id="@+id/successfulexamples"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="成功案例"
                     android:textSize="26px"
-                    android:layout_below="@+id/successfulexamples"
                     android:layout_marginLeft="5dp"
-                    android:textColor="#e39718"/>
+                    android:textColor="#e39718"
+                    android:layout_marginTop="5dp"/>
                 <LinearLayout
                     android:layout_width="218dp"
                     android:layout_height="10dp"
@@ -95,22 +124,15 @@
                     android:layout_height="0dp"
                     android:background="@mipmap/meetingroom_03"
                     android:layout_weight="1">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Meeting informations"
-                        android:textSize="26px"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="5dp"
-                        android:id="@+id/meetinginformations"/>
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="会议信息"
                         android:textSize="26px"
-                        android:layout_below="@+id/meetinginformations"
                         android:layout_marginLeft="5dp"
-                        android:textColor="#e39718"/>
+                        android:textColor="#e39718"
+                        android:layout_marginTop="5dp"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -120,7 +142,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="5dp"
                         android:id="@+id/nowbg"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="25dp"
                         android:layout_marginLeft="50dp"
                         android:layout_marginRight="50dp"
                         >
@@ -129,7 +151,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text=""
-                            android:textSize="14dp"
+                            android:textSize="18dp"
                             android:textColor="#ffffff"
                             android:gravity="center|bottom"
                             android:id="@+id/nowroom"
@@ -141,7 +163,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text=""
-                            android:textSize="11dp"
+                            android:textSize="14dp"
                             android:textColor="#ffffff"
                             android:gravity="center|bottom"
                             android:id="@+id/nowtheme"
@@ -151,7 +173,7 @@
                             android:layout_height="0dp"
                             android:layout_weight="1"
                             android:text=""
-                            android:textSize="11dp"
+                            android:textSize="14dp"
                             android:textColor="#ffffff"
                             android:gravity="center"
                             android:id="@+id/nowtime"
@@ -159,9 +181,9 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
-                            android:layout_weight="1"
+                            android:layout_weight="1.2"
                             android:text=""
-                            android:textSize="11dp"
+                            android:textSize="14dp"
                             android:textColor="#ffffff"
                             android:gravity="center|top"
                             android:id="@+id/nowuser"
@@ -253,12 +275,16 @@
                         android:scrollbars="vertical"
                         android:layout_below="@+id/garyline2"
                         android:layout_above="@+id/bottom"
-                       ></ListView>
+                       >
+
+                    </ListView>
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="#e7e7e7"
-                        android:layout_below="@id/meetings"></LinearLayout>
+                        android:layout_below="@id/meetings">
+
+                    </LinearLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="30dp"
@@ -271,27 +297,22 @@
                             android:gravity="left|center_vertical"
                             android:layout_alignParentLeft="true"
                             android:text="提示信息："
-                            android:textSize="18px"
+                            android:textSize="20px"
                             android:textColor="#333333"
                             android:id="@+id/tishi"
+                            android:textStyle="bold"
                            />
-                        <com.dongdao.meetingmanager.view.MtTextView
+                        <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="left|center_vertical"
-                            android:text="302会议室正在使用中"
                             android:textSize="18px"
                             android:textColor="#333333"
                             android:id="@+id/tips"
                             android:layout_toRightOf="@+id/tishi"
-                            android:singleLine="true"
-                            android:ellipsize="marquee"
-                            android:focusable="true"
-                            android:focusableInTouchMode="true"
                             android:paddingLeft="1dp"
                             android:paddingRight="1dp"
-                            android:marqueeRepeatLimit="marquee_forever"
-                            android:scrollHorizontally="true"/>
+                            />
                     </RelativeLayout>
                 </RelativeLayout>
             </LinearLayout>

@@ -61,7 +61,28 @@ public class MeetingAdapter extends BaseAdapter {
             holder= (ViewHolder) convertView.getTag();
         }
             isNull(holder,mMeetinginfos.get(position));
-
+            if(mMeetinginfos.get(position).getUsestatus()==0)
+            {
+                holder.room.setTextColor(Color.parseColor("#333333"));
+                holder.name.setTextColor(Color.parseColor("#333333"));
+                holder.date.setTextColor(Color.parseColor("#333333"));
+                holder.time.setTextColor(Color.parseColor("#333333"));
+                holder.people.setTextColor(Color.parseColor("#333333"));
+            }else if(mMeetinginfos.get(position).getUsestatus()==1)
+            {
+                holder.room.setTextColor(Color.parseColor("#edda26"));
+                holder.name.setTextColor(Color.parseColor("#edda26"));
+                holder.date.setTextColor(Color.parseColor("#edda26"));
+                holder.time.setTextColor(Color.parseColor("#edda26"));
+                holder.people.setTextColor(Color.parseColor("#edda26"));
+            }else if(mMeetinginfos.get(position).getUsestatus()==2)
+            {
+                holder.room.setTextColor(Color.parseColor("#26d35b"));
+                holder.name.setTextColor(Color.parseColor("#26d35b"));
+                holder.date.setTextColor(Color.parseColor("#26d35b"));
+                holder.time.setTextColor(Color.parseColor("#26d35b"));
+                holder.people.setTextColor(Color.parseColor("#26d35b"));
+            }
         return convertView;
     }
 
@@ -93,6 +114,6 @@ public class MeetingAdapter extends BaseAdapter {
         }else{
             holder.people.setText(meetinginfo.getMeetinguser());
         }
-
     };
+
 }

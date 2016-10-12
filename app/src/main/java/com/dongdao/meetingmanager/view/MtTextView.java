@@ -1,6 +1,7 @@
 package com.dongdao.meetingmanager.view;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -25,4 +26,6 @@ public class MtTextView extends TextView {
     public boolean isFocused() {
         return true;
     }
+
+
 }
