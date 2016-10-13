@@ -302,16 +302,24 @@
                             android:id="@+id/tishi"
                             android:textStyle="bold"
                            />
-                        <TextView
+                        <com.dongdao.meetingmanager.view.MtTextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:gravity="left|center_vertical"
+                            android:gravity="center_vertical"
                             android:textSize="18px"
                             android:textColor="#333333"
                             android:id="@+id/tips"
                             android:layout_toRightOf="@+id/tishi"
+                            android:text="hello"
+                            android:singleLine="true"
+                            android:textStyle="bold"
+                            android:ellipsize="marquee"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
                             android:paddingLeft="1dp"
                             android:paddingRight="1dp"
+                            android:marqueeRepeatLimit="marquee_forever"
+                            android:scrollHorizontally="true"
                             />
                     </RelativeLayout>
                 </RelativeLayout>

@@ -40,7 +40,6 @@ public class MyService extends Service implements MyCallBackHandle{
     private MyStringCallBack mBack;
     private Intent intent = new Intent("com.example.communication.RECEIVER");
     private Intent beforeintent=new Intent("before");
-    private Intent afterintent=new Intent("after");
     private Intent weatherintent=new Intent("weather");
     private Intent errorintent=new Intent("error");
 
@@ -111,20 +110,6 @@ public class MyService extends Service implements MyCallBackHandle{
                 break;
         }
     }
-
-    @Override
-    public void onAfter(int id) {
-        switch (id){
-            case 1:
-                sendBroadcast(afterintent);
-                break;
-        }
-
-    }
-
-    @Override
-    public void inProgress(float progress, long total, int id) {
-    }
     private void parse(String s,int index){
         switch (index){
             case 1:
@@ -148,18 +133,12 @@ public class MyService extends Service implements MyCallBackHandle{
                 JSONObject cond=nowWeather.getJSONObject("cond");
                 mWeather=JSON.parseObject(cond.toString(),Weatherpic.class);
                 temp=nowWeather.getString("tmp");
-                Log.e("weather",nowWeather.toString());
-                /*JSONObject data=weather.getJSONObject("data");
-                JSONArray forcast=data.getJSONArray("forecast");*/
-               /* mWeathers=JSON.parseArray(forcast.toString(),Weather.class);
-                mWeather=mWeathers.get(0);*/
                 break;
         }
 
     }
     private List<Meetinginfo> initallList(List<MeetRoominfo> roominfos,List<Meetinginfo> meetinginfos) {
         for(int i=0;i<roominfos.size();i++){
-            //meetingroom, String meetingtheme, String meetingtime, String meetinguser, String begintime, String endtime, int usestatus
             mMeetinginfo=new Meetinginfo(roominfos.get(i).getMeetingroom(),"","","","","",0);
             meetinginfos.add(0, mMeetinginfo);
         }

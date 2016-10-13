@@ -56,7 +56,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private String temp;
     private String tq;
     private  ImageView tqimg;
-    //private MtTextView tips;
+    private MyTextView tips;
     //天气接口
     //TextView滚动
 
@@ -89,9 +89,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
             }
             if(action.equals("before")){
                 Toast.makeText(MeetingActivity.this,"正在更新数据",Toast.LENGTH_SHORT).show();
-            }
-            if(action.equals("after")){
-                Toast.makeText(MeetingActivity.this,"更新数据完成",Toast.LENGTH_SHORT).show();
             }
             if(action.equals("weather")){
                 mWeather= (Weatherpic) intent.getSerializableExtra("cond");
@@ -149,6 +146,8 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         nowuser= (TextView) this.findViewById(R.id.nowuser);
         mLayout= (LinearLayout) this.findViewById(R.id.nowbg);
         mLayout.setBackgroundResource(R.drawable.rightmeeting);
+        tips= (MyTextView) this.findViewById(R.id.tips);
+
 
     }
 
@@ -175,19 +174,16 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     }
 
     @Override
-    public void onAfter(int id) {
-
-    }
-
-    @Override
-    public void inProgress(float progress, long total, int id) {
-
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        setAnimation();
+        tips.startFor0();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        tips.stopScroll();
+
     }
 
     @Override
@@ -195,6 +191,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         super.onDestroy();
         unregisterReceiver(msgReceiver);
         mUtils=null;
+
     }
 
     //JSON 解析
@@ -221,10 +218,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private void getPic(){
         mBack=new MyStringCallBack(this);
         HttpUtils.post("http://192.168.1.76:8702/jinfeng/cfpic/allpic.do",2,null,mBack);
-
-    }
-
-    private void setAnimation(){
 
     }
     private  void getTqpic(ImageView tqimg,String code){
@@ -379,13 +372,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
             case "999":
                 tqimg.setImageResource(R.mipmap.t999);
                 break;
-
-
-
-
-
-
-
         }
     }
 

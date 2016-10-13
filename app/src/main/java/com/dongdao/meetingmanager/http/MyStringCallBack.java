@@ -32,15 +32,4 @@ public class MyStringCallBack extends StringCallback {
         mHandle.onBefore(request,id);
     }
 
-
-    @Override
-    public void onAfter(int id) {
-        mHandle.onAfter(id);
-    }
-
-    @Override
-    public void inProgress(float progress, long total, int id) {
-        mHandle.inProgress(progress,total,id);
-    }
-
 }
