@@ -36,6 +36,7 @@ import okhttp3.Call;
 import okhttp3.Request;
 
 import static com.dongdao.meetingmanager.R.id.myviewflipper;
+import static com.dongdao.meetingmanager.R.id.tips;
 
 /**
  * Created by Administrator on 2016/9/18.
@@ -56,7 +57,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private String temp;
     private String tq;
     private  ImageView tqimg;
-    private MyTextView tips;
     //天气接口
     //TextView滚动
 
@@ -146,7 +146,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         nowuser= (TextView) this.findViewById(R.id.nowuser);
         mLayout= (LinearLayout) this.findViewById(R.id.nowbg);
         mLayout.setBackgroundResource(R.drawable.rightmeeting);
-        tips= (MyTextView) this.findViewById(R.id.tips);
 
 
     }
@@ -176,13 +175,11 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     @Override
     protected void onResume() {
         super.onResume();
-        tips.startFor0();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        tips.stopScroll();
 
     }
 
