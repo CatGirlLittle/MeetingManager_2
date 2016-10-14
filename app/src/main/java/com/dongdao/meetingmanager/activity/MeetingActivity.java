@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
@@ -27,40 +29,61 @@ import com.dongdao.meetingmanager.info.Meetinginfo;
 import com.dongdao.meetingmanager.info.Pic;
 import com.dongdao.meetingmanager.info.Weatherpic;
 import com.dongdao.meetingmanager.service.MyService;
+import com.dongdao.meetingmanager.view.MtTextView;
 import com.lidroid.xutils.BitmapUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Request;
-
-import static com.dongdao.meetingmanager.R.id.myviewflipper;
-import static com.dongdao.meetingmanager.R.id.tips;
 
 /**
  * Created by Administrator on 2016/9/18.
  */
-public class MeetingActivity extends FragmentActivity implements MyCallBackHandle{
-    private List<Meetinginfo> nowMeetinginfos=new ArrayList<Meetinginfo>();
-    private List<Pic> mPics=new ArrayList<>();
+public class MeetingActivity extends FragmentActivity implements MyCallBackHandle {
+    @BindView(R.id.txtclock1)
+    TextClock txtclock1;
+    @BindView(R.id.txtclock)
+    TextClock txtclock;
+    @BindView(R.id.tips)
+    MtTextView tips;
+    @BindView(R.id.texttq)
+    TextView tqtxt;
+    @BindView(R.id.weather)
+    TextView textview;
+    @BindView(R.id.nowroom)
+    TextView nowroom;
+    @BindView(R.id.nowtheme)
+    TextView nowtheme;
+    @BindView(R.id.nowtime)
+    TextView nowtime;
+    @BindView(R.id.nowuser)
+    TextView nowuser;
+    @BindView(R.id.imageViewtq)
+    ImageView tqimg;
+    @BindView(R.id.meetings)
+    ListView mListView;
+    @BindView(R.id.nowbg)
+    LinearLayout mLayout;
+    @BindView(R.id.myviewflipper)
+    ViewFlipper mFlipper;
+    private List<Meetinginfo> nowMeetinginfos = new ArrayList<Meetinginfo>();
+    private List<Pic> mPics = new ArrayList<>();
     private Meetinginfo mMeetinginfo;
     private MeetingAdapter mAdapter;
-    private ListView mListView;
-    private ViewFlipper mFlipper;
     private MyStringCallBack mBack;
-    private TextView  nowroom,nowtheme,nowtime,nowuser,textview,tqtxt;
-    private LinearLayout mLayout;
     private MsgReceiver msgReceiver;
     private BitmapUtils mUtils;
     private Weatherpic mWeather;
     private String temp;
     private String tq;
-    private  ImageView tqimg;
     //天气接口
     //TextView滚动
 
-    class  MsgReceiver extends BroadcastReceiver {
+    class MsgReceiver extends BroadcastReceiver {
 
         public MsgReceiver() {
         }
@@ -68,8 +91,8 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            String action=intent.getAction();
-            if(action.equals("com.example.communication.RECEIVER")) {
+            String action = intent.getAction();
+            if (action.equals("com.example.communication.RECEIVER")) {
                 nowMeetinginfos = (List<Meetinginfo>) intent.getSerializableExtra("nowmeeting");
                 if (nowMeetinginfos.size() <= 0) {
                     nowroom.setText("当前室会议");
@@ -87,32 +110,37 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
                 mListView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             }
-            if(action.equals("before")){
-                Toast.makeText(MeetingActivity.this,"正在更新数据",Toast.LENGTH_SHORT).show();
+            if (action.equals("before")) {
+                Toast.makeText(MeetingActivity.this, "正在更新数据", Toast.LENGTH_SHORT).show();
             }
-            if(action.equals("weather")){
-                mWeather= (Weatherpic) intent.getSerializableExtra("cond");
+            if (action.equals("weather")) {
+                mWeather = (Weatherpic) intent.getSerializableExtra("cond");
                 tqtxt.setText(mWeather.getTxt());
-                temp=intent.getStringExtra("tmp");
-                textview.setText(temp+"℃");
-                getTqpic(tqimg,mWeather.getCode());
+                temp = intent.getStringExtra("tmp");
+                textview.setText(temp + "℃");
+                getTqpic(tqimg, mWeather.getCode());
             }
-            if (action.equals("error")){
-                Toast.makeText(MeetingActivity.this,"请求失败",Toast.LENGTH_SHORT).show();
+            if (action.equals("error")) {
+                Toast.makeText(MeetingActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
             }
         }
 
     }
+
+    /* nowroom,nowtheme,nowtime,nowuser*/
+
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_meeting_list);
-        mUtils=new BitmapUtils(this);
+        ButterKnife.bind(this);
+        mUtils = new BitmapUtils(this);
         initView();
         initData();
     }
+
     //初始化数据 通过网络请求
     private void initData() {
         msgReceiver = new MsgReceiver();
@@ -123,49 +151,38 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         intentFilter.addAction("weather");
         intentFilter.addAction("error");
         registerReceiver(msgReceiver, intentFilter);
-        Intent intent=new Intent(this,MyService.class);
+        Intent intent = new Intent(this, MyService.class);
         startService(intent);
         getPic();
     }
 
-    private void initAdapter() {}
+    private void initAdapter() {
+    }
 
     private void initListener() {
     }
+
     //初始化控件
     private void initView() {
-        tqtxt= (TextView) this.findViewById(R.id.texttq);
-        tqimg= (ImageView) this.findViewById(R.id.imageViewtq);
-        textview= (TextView) this.findViewById(R.id.weather);
-        mListView= (ListView) this.findViewById(R.id.meetings);
-        mFlipper= (ViewFlipper) this.findViewById(myviewflipper);
-        nowroom= (TextView) this.findViewById(R.id.nowroom);
         nowroom.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);//下划线
-        nowtheme= (TextView) this.findViewById(R.id.nowtheme);
-        nowtime= (TextView) this.findViewById(R.id.nowtime);
-        nowuser= (TextView) this.findViewById(R.id.nowuser);
-        mLayout= (LinearLayout) this.findViewById(R.id.nowbg);
         mLayout.setBackgroundResource(R.drawable.rightmeeting);
-
-
     }
 
     @Override
     public void OnError(Call call, int i, Exception e) {
-
     }
 
     @Override
     public void onResponse(Object s, int i) {
-       switch (i){
-           case 1:
-               break;
-           case 2:
-               parse(s.toString(),2);
-               break;
-           case 3:
-               break;
-       }
+        switch (i) {
+            case 1:
+                break;
+            case 2:
+                parse(s.toString(), 2);
+                break;
+            case 3:
+                break;
+        }
     }
 
     @Override
@@ -187,23 +204,23 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(msgReceiver);
-        mUtils=null;
+        mUtils = null;
 
     }
 
     //JSON 解析
-    private void parse(String s,int id){
-        switch (id){
+    private void parse(String s, int id) {
+        switch (id) {
             case 2:
-                JSONObject object= JSON.parseObject(s);
-                JSONObject result=object.getJSONObject("result");
-                JSONArray picList=result.getJSONArray("picList");
-                mPics=JSON.parseArray(picList.toString(),Pic.class);
-                for(int i=0;i<mPics.size();i++){
-                    String url=mPics.get(i).getPicpath();
-                    ImageView view=new ImageView(this);
+                JSONObject object = JSON.parseObject(s);
+                JSONObject result = object.getJSONObject("result");
+                JSONArray picList = result.getJSONArray("picList");
+                mPics = JSON.parseArray(picList.toString(), Pic.class);
+                for (int i = 0; i < mPics.size(); i++) {
+                    String url = mPics.get(i).getPicpath();
+                    ImageView view = new ImageView(this);
                     view.setAdjustViewBounds(true);
-                    mUtils.display(view,url);
+                    mUtils.display(view, url);
                     mFlipper.addView(view);
                 }
                 mFlipper.startFlipping();
@@ -211,14 +228,16 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
         }
 
     }
+
     //获取图片
-    private void getPic(){
-        mBack=new MyStringCallBack(this);
-        HttpUtils.post("http://192.168.1.76:8702/jinfeng/cfpic/allpic.do",2,null,mBack);
+    private void getPic() {
+        mBack = new MyStringCallBack(this);
+        HttpUtils.post("http://192.168.1.76:8702/jinfeng/cfpic/allpic.do", 2, null, mBack);
 
     }
-    private  void getTqpic(ImageView tqimg,String code){
-        switch (code){
+
+    private void getTqpic(ImageView tqimg, String code) {
+        switch (code) {
             case "100":
                 tqimg.setImageResource(R.mipmap.t100);
                 break;
