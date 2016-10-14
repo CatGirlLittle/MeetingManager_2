@@ -40,10 +40,6 @@ import okhttp3.Request;
  * Created by Administrator on 2016/9/18.
  */
 public class MeetingActivity extends FragmentActivity implements MyCallBackHandle {
-    @BindView(R.id.txtclock1)
-    TextClock txtclock1;
-    @BindView(R.id.txtclock)
-    TextClock txtclock;
     @BindView(R.id.tips)
     MtTextView tips;
     @BindView(R.id.texttq)
