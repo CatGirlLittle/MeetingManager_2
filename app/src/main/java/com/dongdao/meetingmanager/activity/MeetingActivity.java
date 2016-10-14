@@ -11,12 +11,10 @@ import android.support.v4.app.FragmentActivity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -31,10 +29,8 @@ import com.dongdao.meetingmanager.info.Weatherpic;
 import com.dongdao.meetingmanager.service.MyService;
 import com.dongdao.meetingmanager.view.MtTextView;
 import com.lidroid.xutils.BitmapUtils;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
@@ -80,12 +76,11 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private Weatherpic mWeather;
     private String temp;
     private String tq;
-    //天气接口
-    //TextView滚动
 
     class MsgReceiver extends BroadcastReceiver {
 
         public MsgReceiver() {
+
         }
 
         @Override
@@ -124,12 +119,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
                 Toast.makeText(MeetingActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
-
-    /* nowroom,nowtheme,nowtime,nowuser*/
-
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,9 +147,11 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     }
 
     private void initAdapter() {
+
     }
 
     private void initListener() {
+
     }
 
     //初始化控件
@@ -170,6 +162,7 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
 
     @Override
     public void OnError(Call call, int i, Exception e) {
+
     }
 
     @Override
@@ -190,22 +183,10 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-
-    }
-
-    @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(msgReceiver);
         mUtils = null;
-
     }
 
     //JSON 解析
@@ -233,7 +214,6 @@ public class MeetingActivity extends FragmentActivity implements MyCallBackHandl
     private void getPic() {
         mBack = new MyStringCallBack(this);
         HttpUtils.post("http://192.168.1.76:8702/jinfeng/cfpic/allpic.do", 2, null, mBack);
-
     }
 
     private void getTqpic(ImageView tqimg, String code) {
